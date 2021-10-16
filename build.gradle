@@ -1,6 +1,7 @@
 //file:noinspection GradlePackageUpdate
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.5.31'
+    id 'application'
 }
 
 group 'me.kuku'
@@ -26,6 +27,10 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-test {
-    useJUnitPlatform()
+application {
+    mainClass = 'me.kuku.tg.StartKt'
+}
+
+applicationDistribution.from("src/main/resources/conf/YuQ.properties") {
+    into "bin/conf"
 }
