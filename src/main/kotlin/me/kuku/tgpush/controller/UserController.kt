@@ -1,19 +1,21 @@
-package me.kuku.tg.controller
+package me.kuku.tgpush.controller
 
-import me.kuku.tg.Extension
-import me.kuku.tg.entity.UserEntity
-import me.kuku.tg.entity.UserService
+import me.kuku.tgpush.Extension
+import me.kuku.tgpush.entity.UserEntity
+import me.kuku.tgpush.entity.UserService
+import org.springframework.stereotype.Service
 import org.telegram.abilitybots.api.objects.Ability
 import org.telegram.abilitybots.api.objects.Locality
 import org.telegram.abilitybots.api.objects.Privacy
 import org.telegram.abilitybots.api.util.AbilityExtension
 import java.util.*
-import javax.inject.Inject
+import javax.annotation.Resource
 
+@Service
 @Extension
 class UserController: AbilityExtension {
 
-    @Inject
+    @Resource
     private lateinit var userService: UserService
 
     private fun key(): String {

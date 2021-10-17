@@ -1,10 +1,8 @@
-package me.kuku.tg.entity
+package me.kuku.tgpush.entity
 
-import com.IceCreamQAQ.Yu.annotation.AutoBind
-import com.icecreamqaq.yudb.jpa.JPADao
-import com.icecreamqaq.yudb.jpa.annotation.Transactional
 import org.hibernate.Hibernate
-import javax.inject.Inject
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Service
 import javax.persistence.*
 
 @Entity
@@ -35,29 +33,23 @@ data class UserEntity(
 
 }
 
-interface UserDao: JPADao<UserEntity, Int> {
+interface UserRepository: JpaRepository<UserEntity, Int> {
     fun findByKey(key: String): UserEntity?
     fun findByUserid(userid: Long): UserEntity?
 }
 
-@AutoBind
 interface UserService {
     fun findByKey(key: String): UserEntity?
     fun findByUserid(userid: Long): UserEntity?
-    fun save(userEntity: UserEntity)
+    fun save(userEntity: UserEntity): UserEntity
 }
 
-class UserServiceImpl: UserService{
+@Service
+class UserServiceImpl(val userRepository: UserRepository): UserService{
 
-    @Inject
-    private lateinit var userDao: UserDao
+    override fun findByKey(key: String) = userRepository.findByKey(key)
 
-    @Transactional
-    override fun findByKey(key: String) = userDao.findByKey(key)
+    override fun findByUserid(userid: Long) = userRepository.findByUserid(userid)
 
-    @Transactional
-    override fun findByUserid(userid: Long) = userDao.findByUserid(userid)
-
-    @Transactional
-    override fun save(userEntity: UserEntity) = userDao.saveOrUpdate(userEntity)
+    override fun save(userEntity: UserEntity) = userRepository.save(userEntity)
 }

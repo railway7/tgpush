@@ -1,28 +1,30 @@
-package me.kuku.tg.controller
+package me.kuku.tgpush.controller
 
-import com.IceCreamQAQ.Yu.annotation.Action
-import com.IceCreamQAQ.YuWeb.annotation.WebController
-import me.kuku.pojo.Result
 import me.kuku.pojo.ResultStatus
-import me.kuku.tg.TgBot
-import me.kuku.tg.entity.UserService
+import me.kuku.pojo.Result
+import me.kuku.tgpush.TgBot
+import me.kuku.tgpush.entity.UserService
 import me.kuku.utils.MyUtils
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RestController
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto
 import org.telegram.telegrambots.meta.api.objects.InputFile
 import java.io.ByteArrayInputStream
 import java.util.*
-import javax.inject.Inject
+import javax.annotation.Resource
 
-@WebController
+@RestController
 class PushController {
 
-    @Inject
+    @Resource
     private lateinit var userService: UserService
-    @Inject
+    @Resource
     private lateinit var tgBot: TgBot
 
-    @Action("/md/{key}")
-    fun md(key: String, msg: String?): Result<*> {
+    @RequestMapping(value = ["/md/{key}"], method = [RequestMethod.GET, RequestMethod.POST])
+    fun md(@PathVariable key: String, msg: String?): Result<*> {
         if (Objects.isNull(msg)) return ResultStatus.PARAM_ERROR.toResult()
         val userEntity = userService.findByKey(key)
             ?: return ResultStatus.DATA_NOT_EXISTS.toResult()
@@ -30,7 +32,7 @@ class PushController {
         return Result.success()
     }
 
-    @Action("/image/{key}")
+    @RequestMapping(value = ["/image/{key}"], method = [RequestMethod.GET, RequestMethod.POST])
     fun image(key: String, url: String?, base: String?): Result<*> {
         if (Objects.isNull(url) && Objects.isNull(base)) return ResultStatus.PARAM_ERROR.toResult()
         val userEntity = userService.findByKey(key)
